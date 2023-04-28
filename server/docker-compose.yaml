@@ -1,0 +1,9 @@
+version: "2.2"
+services:
+  main:
+    volumes:
+      - ./authorized_keys:/home/hub/.ssh/authorized_keys
+    ports:
+      - "9000:22"
+    build: .
+    restart: always
