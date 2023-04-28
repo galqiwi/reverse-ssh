@@ -3,8 +3,6 @@ services:
   main:
     volumes:
       - ./authorized_keys:/home/hub/.ssh/authorized_keys
-    ports:
-      - "4000:22"
-      - "4001-4999"
+    network_mode: "host"
     build: .
     restart: always
