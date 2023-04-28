@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"github.com/galqiwi/reverse-ssh/internal/connector"
-	"os"
+	"os/user"
 	"path/filepath"
 	"time"
 )
@@ -14,28 +15,20 @@ type Args struct {
 	connectionConfig connector.ConnectionConfig
 }
 
-func getDefaultCredentialFile() (string, error) {
-	user := os.Getenv("USER")
-	if user == "" {
-		return "", errors.New("failed to get $USER")
-	}
-	return filepath.Join("/home/", user, ".ssh/id_rsa"), nil
-}
-
 func getArgs() (*Args, error) {
-	defaultCredentialFile, err := getDefaultCredentialFile()
+	u, err := user.Current()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get user, %w", err)
 	}
 
 	lockFile := flag.String("lock-file", "/tmp/reverse-ssh-client-lock", "path of lock file")
-	CredentialFile := flag.String("credential-file", defaultCredentialFile, "path to credentials")
+	CredentialFile := flag.String("credential-file", filepath.Join(u.HomeDir, ".ssh/id_rsa"), "path to credentials")
 	RemotePort := flag.Int("remote-port", 2222, "ssh tunnel port")
 	LocalPort := flag.Int("local-port", 22, "port for localhost")
 	HubPort := flag.Int("hub-port", 22, "hub ssh port")
 	HubHostname := flag.String("hub-hostname", "", "hub ssh host")
 	HubUsername := flag.String("hub-username", "", "hub")
-	LocalUsername := flag.String("local-username", os.Getenv("USER"), "local username for healthchecks")
+	LocalUsername := flag.String("local-username", u.Username, "local username for healthchecks")
 	HealthcheckCooldownSecs := flag.Int("healthcheck-cooldown-secs", 10, "halthcheck cooldown")
 	HealthcheckTimeoutSecs := flag.Int("healthcheck-timeout-secs", 10, "halthcheck timeout")
 
