@@ -4,7 +4,7 @@ services:
     volumes:
       - ./authorized_keys:/home/hub/.ssh/authorized_keys
     ports:
-      - "9000:22"
-      - "4000-4999"
+      - "4000:22"
+      - "4001-4999"
     build: .
     restart: always
