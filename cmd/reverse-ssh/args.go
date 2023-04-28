@@ -27,7 +27,7 @@ func getArgs() (*Args, error) {
 	LocalPort := flag.Int("local-port", 22, "port for localhost")
 	HubPort := flag.Int("hub-port", 22, "hub ssh port")
 	HubHostname := flag.String("hub-hostname", "", "hub ssh host")
-	HubUsername := flag.String("hub-username", "", "hub")
+	HubUsername := flag.String("hub-username", "hub", "hub username")
 	LocalUsername := flag.String("local-username", u.Username, "local username for healthchecks")
 	HealthcheckCooldownSecs := flag.Int("healthcheck-cooldown-secs", 10, "halthcheck cooldown")
 	HealthcheckTimeoutSecs := flag.Int("healthcheck-timeout-secs", 10, "halthcheck timeout")
