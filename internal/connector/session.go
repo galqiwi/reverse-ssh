@@ -32,7 +32,7 @@ func RunSession(config ConnectionConfig) error {
 	}()
 
 	for {
-		time.Sleep(config.HealthcheckCooldown)
+		time.Sleep(time.Duration(config.HealthcheckCooldownSecs) * time.Second)
 		ok, err := CheckConnection(config)
 		if err != nil || !ok {
 			break

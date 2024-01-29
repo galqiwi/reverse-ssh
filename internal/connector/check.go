@@ -7,10 +7,11 @@ import (
 	"github.com/google/uuid"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func CheckConnection(config ConnectionConfig) (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), config.HealthcheckTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(config.HealthcheckTimeoutSecs)*time.Second)
 	defer cancel()
 
 	challenge := filepath.Join(os.TempDir(), uuid.New().String())

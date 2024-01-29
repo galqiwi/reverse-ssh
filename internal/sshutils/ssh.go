@@ -4,10 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
-	"strings"
 )
 
 type PortForwarding struct {
@@ -23,19 +21,6 @@ type SSHArgs struct {
 	RemoteCommand            string
 	HoldConnection           bool
 	RemoteToLocalForwardings []PortForwarding
-}
-
-func beautifyCmdArgs(args []string) string {
-	output := make([]string, 0, len(args))
-
-	for _, argument := range args {
-		if strings.Contains(argument, " ") {
-			argument = fmt.Sprintf("'%s'", argument)
-		}
-		output = append(output, argument)
-	}
-
-	return strings.Join(output, " ")
 }
 
 func RunSSH(ctx context.Context, args SSHArgs) error {
@@ -60,7 +45,6 @@ func RunSSH(ctx context.Context, args SSHArgs) error {
 		cmdArgs = append(cmdArgs, "-N")
 	}
 
-	log.Println("running ssh", beautifyCmdArgs(cmdArgs))
 	cmd := exec.CommandContext(ctx, "ssh", cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
