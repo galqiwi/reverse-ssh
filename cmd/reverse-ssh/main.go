@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/galqiwi/reverse-ssh/internal/reverse_ssh"
+	"github.com/galqiwi/reverse-ssh/internal/wizard"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -13,6 +14,7 @@ var ReverseSSHCmd = &cobra.Command{
 
 func init() {
 	ReverseSSHCmd.AddCommand(reverse_ssh.ConnectCmd)
+	ReverseSSHCmd.AddCommand(wizard.WizardCmd)
 }
 
 func main() {

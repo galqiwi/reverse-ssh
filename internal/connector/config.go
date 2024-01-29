@@ -1,13 +1,13 @@
 package connector
 
 type ConnectionConfig struct {
-	CredentialFile          string
-	RemotePort              int
-	LocalPort               int
-	HubPort                 int
-	HubHostname             string
-	HubUsername             string
-	LocalUsername           string
+	CredentialFile          string // done
+	RemotePort              int    // done
+	LocalPort               int    // done
+	HubPort                 int    // done
+	HubHostname             string // done
+	HubUsername             string // done
+	LocalUsername           string // done
 	HealthcheckCooldownSecs int
 	HealthcheckTimeoutSecs  int
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type ReverseSSHConfig struct {
-	ConnectionConfig connector.ConnectionConfig
+	ConnectionConfig *connector.ConnectionConfig
 	LockFile         string
 }
 
@@ -31,7 +31,7 @@ func NewDefaultConfig() (*ReverseSSHConfig, error) {
 	}
 
 	return &ReverseSSHConfig{
-		ConnectionConfig: connectionConfig,
+		ConnectionConfig: &connectionConfig,
 		LockFile:         "/tmp/reverse-ssh-client-lock",
 	}, nil
 }

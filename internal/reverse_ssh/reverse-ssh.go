@@ -68,5 +68,5 @@ func Main() error {
 		_ = lock.Unlock()
 	}()
 
-	return connector.Connect(config.ConnectionConfig)
+	return connector.Connect(*config.ConnectionConfig)
 }

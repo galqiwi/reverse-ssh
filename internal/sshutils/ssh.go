@@ -1,10 +1,10 @@
 package sshutils
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
 )
 
@@ -27,6 +27,7 @@ func RunSSH(ctx context.Context, args SSHArgs) error {
 	cmdArgs := make([]string, 0)
 	cmdArgs = append(cmdArgs, "-g")
 	cmdArgs = append(cmdArgs, "-o", "StrictHostKeyChecking=no")
+	cmdArgs = append(cmdArgs, "-o", "BatchMode=yes")
 	cmdArgs = append(cmdArgs, "-i", args.CredentialsFile)
 	cmdArgs = append(cmdArgs, "-p", fmt.Sprint(args.RemotePort))
 	cmdArgs = append(cmdArgs, "-l", args.RemoteUsername)
@@ -46,7 +47,21 @@ func RunSSH(ctx context.Context, args SSHArgs) error {
 	}
 
 	cmd := exec.CommandContext(ctx, "ssh", cmdArgs...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	stdout := &bytes.Buffer{}
+	cmd.Stdout = stdout
+	stderr := &bytes.Buffer{}
+	cmd.Stderr = stderr
+
+	err := cmd.Run()
+
+	if err != nil {
+		return fmt.Errorf(
+			"%v%v%v",
+			stdout.String(),
+			stderr.String(),
+			err.Error(),
+		)
+	}
+
+	return nil
 }

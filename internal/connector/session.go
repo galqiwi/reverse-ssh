@@ -8,7 +8,21 @@ import (
 	"time"
 )
 
-func RunSession(config ConnectionConfig) error {
+func RunSession(ctx context.Context, config ConnectionConfig) {
+	_ = sshutils.RunSSH(ctx, sshutils.SSHArgs{
+		RemoteHost:      config.HubHostname,
+		RemotePort:      config.HubPort,
+		RemoteUsername:  config.HubUsername,
+		CredentialsFile: config.CredentialFile,
+		HoldConnection:  true,
+		RemoteToLocalForwardings: []sshutils.PortForwarding{{
+			LocalPort:  config.LocalPort,
+			RemotePort: config.RemotePort,
+		}},
+	})
+}
+
+func RunHealthCheckedSession(config ConnectionConfig) error {
 	sessionContext, killSession := context.WithCancel(context.Background())
 	defer killSession()
 
@@ -18,17 +32,7 @@ func RunSession(config ConnectionConfig) error {
 	go func() {
 		defer wg.Done()
 		defer killSession()
-		_ = sshutils.RunSSH(sessionContext, sshutils.SSHArgs{
-			RemoteHost:      config.HubHostname,
-			RemotePort:      config.HubPort,
-			RemoteUsername:  config.HubUsername,
-			CredentialsFile: config.CredentialFile,
-			HoldConnection:  true,
-			RemoteToLocalForwardings: []sshutils.PortForwarding{{
-				LocalPort:  config.LocalPort,
-				RemotePort: config.RemotePort,
-			}},
-		})
+		RunSession(sessionContext, config)
 	}()
 
 	for {
