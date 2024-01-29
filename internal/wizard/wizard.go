@@ -61,7 +61,7 @@ func Main() error {
 		return err
 	}
 
-	fmt.Printf("Command for reverse ssh connection:\n\n%v", cmd)
+	fmt.Printf("Command for reverse ssh connection:\n\n%v\n", cmd)
 
 	return nil
 }
