@@ -19,17 +19,28 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.20'
+    
+    - name: Test
+      run: go test -v ./...
 
     - name: Build Static Binary
       run: |
-        CGO_ENABLED=0 go build -v -ldflags '-extldflags "-static"' -o reverse-ssh ./cmd/reverse-ssh/...
+        CGO_ENABLED=0 go build -v -ldflags '-extldflags "-static"' -o reverse-ssh-x86-linux ./cmd/reverse-ssh/...
+
+    - name: Build Static Binary (arm)
+      run: |
+        CGO_ENABLED=0 GOARCH=arm64 go build -v -ldflags '-extldflags "-static"' -o reverse-ssh-arm-linux ./cmd/reverse-ssh/...
+
+    - name: Build Static Binary (arm darwin)
+      run: |
+        CGO_ENABLED=0 GOARCH=arm64 GOOS=darwin go build -v -ldflags '-extldflags "-static"' -o reverse-ssh-arm-darwin ./cmd/reverse-ssh/...
       
-    - name: Test
-      run: go test -v ./...
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: reverse-ssh
         path: |
-          reverse-ssh
+          reverse-ssh-x86-linux
+          reverse-ssh-arm-linux
+          reverse-ssh-arm-darwin
